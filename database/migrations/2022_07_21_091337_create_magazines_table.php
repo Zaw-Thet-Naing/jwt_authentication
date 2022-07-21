@@ -15,10 +15,6 @@ return new class extends Migration
     {
         Schema::create('magazines', function (Blueprint $table) {
             $table->id();
-            $table->string("title");
-            $table->string("download_link");
-            $table->date("release_date");
-            $table->boolean("is_active");
             $table->timestamps();
         });
     }
