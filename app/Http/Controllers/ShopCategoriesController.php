@@ -17,7 +17,7 @@ class ShopCategoriesController extends Controller
     {
         $pageSize = $request->page_size ? $request->page_size : 10;
         try{
-            $shopCategory = ShopCategories::paginate($pageSize);
+            $shopCategory = ShopCategories::with(['shop'])->paginate($pageSize);
         }catch(QueryException $e){
             return response()->json([
                 'status' => 'error',

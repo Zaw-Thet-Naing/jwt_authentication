@@ -20,8 +20,9 @@ class BannerSliderController extends Controller
      */
     public function index(Request $request)
     {
+        $pageSize = $request->page_size ? $request->page_size : 10;
         try {
-            $data = BannerSlider::all();
+            $data = BannerSlider::paginate($pageSize);
             return response()->json([
                 'status code' => 200,
                 'message' => 'banner slider list',

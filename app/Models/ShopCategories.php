@@ -13,6 +13,6 @@ class ShopCategories extends Model
 
     public function shop()
     {
-        return $this->hasMany(Shop::class, 'shop_id');
+        return $this->hasMany(Shop::class, 'shop_category_id');
     }
 }

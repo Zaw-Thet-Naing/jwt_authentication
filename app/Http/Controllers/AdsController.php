@@ -20,8 +20,9 @@ class AdsController extends Controller
      */
     public function index(Request $request)
     {
+        $pageSize = $request->page_size ? $request->page_size : 10;
         try {
-            $data = Ads::all();
+            $data = Ads::paginate($pageSize);
             return response()->json([
                 'status code' => 200,
                 'message' => 'ads list',

@@ -31,6 +31,7 @@ Route::middleware(["api"])->group(function() {
     Route::post('/refresh', [JWTController::class, 'refresh']);
     Route::post('/profile', [JWTController::class, 'profile']);
 <<<<<<< HEAD
+<<<<<<< HEAD
 });
 
 Route::middleware(["api"])->group(function(){
@@ -47,6 +48,8 @@ Route::middleware(["api"])->group(function(){
     Route::delete('/shops/{id}', [ShopController::class, 'destroy']);
 =======
 >>>>>>> ee5ae73d95226af5b8b738c25c4fc2a42b2855c0
+=======
+>>>>>>> b886c32e02a6a0e10d981e94f7b57fa80985974a
 
     Route::get('/ads' , [AdsController::class, 'index']);
     Route::post('/ads' , [AdsController::class , 'create']);
@@ -63,7 +66,10 @@ Route::middleware(["api"])->group(function(){
     Route::put('banner/{id}' , [BannerSliderController::class , 'update']);
     Route::delete('banner/{id}' , [BannerSliderController::class , 'destory']);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> b886c32e02a6a0e10d981e94f7b57fa80985974a
 
     Route::get('/shopCategories', [ShopCategoriesController::class, 'index']);
     Route::post('/shopCategories', [ShopCategoriesController::class, 'store']);
@@ -74,5 +80,8 @@ Route::middleware(["api"])->group(function(){
     Route::post('/shops', [ShopController::class, 'store']);
     Route::put('/shops/{id}', [ShopController::class, 'update']);
     Route::delete('/shops/{id}', [ShopController::class, 'destroy']);
+<<<<<<< HEAD
 >>>>>>> ee5ae73d95226af5b8b738c25c4fc2a42b2855c0
+=======
+>>>>>>> b886c32e02a6a0e10d981e94f7b57fa80985974a
 });
