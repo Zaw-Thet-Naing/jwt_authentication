@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AdsController;
+use App\Http\Controllers\ArticlesController;
+use App\Http\Controllers\BannerSliderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JWTController;
@@ -41,4 +44,19 @@ Route::middleware(["api"])->group(function(){
     Route::post('/shops', [ShopController::class, 'store']);
     Route::put('/shops/{id}', [ShopController::class, 'update']);
     Route::delete('/shops/{id}', [ShopController::class, 'destroy']);
+
+    Route::get('/ads' , [AdsController::class, 'index']);
+    Route::post('/ads' , [AdsController::class , 'create']);
+    Route::put('/ads/{id}' , [AdsController::class, 'update']);
+    Route::delete('/ads/{id}' , [AdsController::class, 'destory']);
+
+    Route::get('/articles' , [ArticlesController::class, 'index']);
+    Route::post('/articles' , [ArticlesController::class, 'create']);
+    Route::put('articles/{id}' , [ArticlesController::class , 'update']);
+    Route::delete('articles/{id}' , [ArticlesController::class , 'destory']);
+
+    Route::get('/banner' , [BannerSliderController::class, 'index']);
+    Route::post('/banner' , [BannerSliderController::class, 'create']);
+    Route::put('banner/{id}' , [BannerSliderController::class , 'update']);
+    Route::delete('banner/{id}' , [BannerSliderController::class , 'destory']);
 });
