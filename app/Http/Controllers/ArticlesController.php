@@ -20,8 +20,9 @@ class ArticlesController extends Controller
      */
     public function index(Request $request)
     {
+        $pageSize = $request->page_size ? $request->page_size : 10;
         try {
-            $data = Articles::all();
+            $data = Articles::paginate($pageSize);
 
             return response()->json([
                 'status code' => 200,

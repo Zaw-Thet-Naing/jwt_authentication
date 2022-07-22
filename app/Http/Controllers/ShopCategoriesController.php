@@ -13,13 +13,15 @@ class ShopCategoriesController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $pageSize = $request->page_size ? $request->page_size : 10;
         try{
-            $shopCategory = ShopCategories::all();
-        }catch(Exception $e){
+            $shopCategory = ShopCategories::with(['shop'])->paginate($pageSize);
+        }catch(QueryException $e){
             return response()->json([
-                'error' => $e,
+                'status' => 'error',
+                'message' => 'Unknown error'
             ]);
         }
 
@@ -29,11 +31,27 @@ class ShopCategoriesController extends Controller
         ]);
     }
 
+    public function show($id){
+        try{
+            $shopCategory = ShopCategories::find($id);
+        }catch(QueryException $e){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unknown error'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'successful',
+            'shop_category' => $shopCategory
+        ]);
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:shop_categories,name',
-            'dir_category' => 'required',
+            'dir_category' => 'required|in:Agriculture,Livestock,Fishery',
             'is_active' => 'required|boolean'
         ]);
         if($validator->fails())
@@ -49,9 +67,10 @@ class ShopCategoriesController extends Controller
                 'dir_category' => $request->dir_category,
                 'is_active' => $request->is_active
             ]);
-        }catch(Exception $e){
+        }catch(QueryException $e){
             return response()->json([
-                'error' => $e,
+                'status' => 'error',
+                'message' => 'Unknown error'
             ]);
         }
 
@@ -66,7 +85,7 @@ class ShopCategoriesController extends Controller
     {
         try{
             $shopCategory = ShopCategories::find($id);
-        }catch(Exception $e){
+        }catch(QueryException $e){
             return response()->json([
                 'error' => 'resource not found',
             ]);
@@ -74,7 +93,7 @@ class ShopCategoriesController extends Controller
 
         $validator = Validation::make($request->all(), [
             'name' => 'required|string|max:255|unique:App\shop_categories,name',
-            'dir_category' => 'required',
+            'dir_category' => 'required|in:Agriculture,Livestock,Fishery',
             'is_active' => 'required|boolean',
         ]);
 
@@ -83,9 +102,10 @@ class ShopCategoriesController extends Controller
             $shopCategory->dir_category = $request->dir_category;
             $shopCategory->is_active = $request->is_active;
             $shopCategory->save();
-        }catch(Exception $e){
+        }catch(QueryException $e){
             return response()->json([
-                'error' => $e,
+                'status' => 'error',
+                'message' => 'Unknown error'
             ]);
         }
         return response()->json([
@@ -99,9 +119,10 @@ class ShopCategoriesController extends Controller
     {
         try{
             $shopCategory = ShopCategories::find($id);
-        }catch(Exception $e){
+        }catch(QueryException $e){
             return response()->json([
-                'error' => $e,
+                'status' => 'error',
+                'message' => 'Unknown error'
             ]);
         }
         $shopCategory->delete();
