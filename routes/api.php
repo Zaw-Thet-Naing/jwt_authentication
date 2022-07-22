@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JWTController;
+use App\Http\Controllers\ShopCategoriesController;
+use App\Http\Controllers\ShopController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,4 +27,18 @@ Route::middleware(["api"])->group(function() {
     Route::post('/logout', [JWTController::class, 'logout']);
     Route::post('/refresh', [JWTController::class, 'refresh']);
     Route::post('/profile', [JWTController::class, 'profile']);
+});
+
+Route::middleware(["api"])->group(function(){
+    Route::get('/shopCategories', [ShopCategoriesController::class, 'index']);
+    Route::post('/shopCategories', [ShopCategoriesController::class, 'store']);
+    Route::put('/shopCategories/{id}', [ShopCategoriesController::class, 'update']);
+    Route::delete('/shopCategories/{id}', [ShopCategoriesController::class, 'destroy']);
+});
+
+Route::middleware(["api"])->group(function(){
+    Route::get('/shops', [ShopController::class, 'index']);
+    Route::post('/shops', [ShopController::class, 'store']);
+    Route::put('/shops/{id}', [ShopController::class, 'update']);
+    Route::delete('/shops/{id}', [ShopController::class, 'destroy']);
 });
