@@ -11,7 +11,7 @@ class BannerSlider extends Model
 
     protected $table= 'banner_slider';
 
-    protected $fillable = ['title','url_link','is_active','banner_type'];
+    protected $fillable = ['title','image','url_link','is_active','banner_type'];
     
     protected $hidden = [];
 

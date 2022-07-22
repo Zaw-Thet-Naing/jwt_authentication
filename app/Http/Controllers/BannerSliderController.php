@@ -14,7 +14,7 @@ class BannerSliderController extends Controller
     }
 
     /**
-     * Get ads
+     * Get banner
      * @var request
      * @return Response
      */
@@ -37,19 +37,20 @@ class BannerSliderController extends Controller
     }
 
     /**
-     * Create ads
+     * Create banner
      * @var request
      * @return Response
      */
     public function create(Request $request)
     {
-        $input = $request->only(['title', 'url_link', 'is_active', 'ads_type']);
+        $input = $request->only(['title', 'image', 'url_link', 'is_active', 'type_banner']);
 
         $validator = Validator::make($input, [
             'title' => "required",
+            'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
             'url_link' => 'required',
             'is_active' => 'required',
-            'banner_type' => 'required | in:mainslider,footerslider,leaderboard'
+            'type_banner' => 'required | in:mainslider,footerslider,leaderboard'
         ]);
 
         if ($validator->fails()) {
@@ -60,14 +61,29 @@ class BannerSliderController extends Controller
             ], 422);
         }
 
+        if ($request->hasFile('image')) {
+            $destination_path = 'public/images/uploads';
+            $image = $request->file('image');
+            $image_name = time() . '.' . $image->getClientOriginalExtension();
+            $path = $request->file('image')->storeAs($destination_path, $image_name);
+            $request->image = $image_name;
+        }
+
         try {
-            $store = BannerSlider::create($input);
+            $store = BannerSlider::create([
+                'title' => $request->title,
+                'image' => $request->image,
+                'url_link' => $request->url_link,
+                'is_active' => $request->is_active,
+                'type_banner' => $request->type_banner,
+            ]);
             return response()->json([
                 'status_code' => 201,
                 'message' => 'banner slider is created',
                 'data' => $store
             ], 201);
         } catch (QueryException $e) {
+            dd($e);
             return response()->json([
                 'status_code' => 500,
                 'message' => $e,
@@ -83,15 +99,16 @@ class BannerSliderController extends Controller
      */
     public function update(Request $request)
     {
-        $input = $request->only(['title', 'url_link', 'is_active', 'ads_type']);
+        $input = $request->only(['title', 'url_link', 'is_active','image' , 'type_banner']);
 
         $id = $request->id;
 
         $validator = Validator::make($input, [
-            'title' => 'required',
-            'url_link' => 'required',
-            'is_active' => 'required',
-            'banner_type' => 'required | in:mainslider,footerslider,leaderboard'
+            // 'title' => 'required',
+            // 'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
+            // 'url_link' => 'required',
+            // 'is_active' => 'required',
+            // 'type_banner' => 'required | in:mainslider,footerslider,leaderboard'
         ]);
 
         if ($validator->fails()) {
@@ -100,6 +117,15 @@ class BannerSliderController extends Controller
                 'message' => $validator->errors()->first(),
                 'data' => []
             ], 422);
+        }
+
+        if ($request->hasFile('image')) {
+            $destination_path = 'public/images/uploads';
+            $image = $request->file('image');
+            $image_name = time() . '.' . $image->getClientOriginalExtension();
+            $path = $request->file('image')->storeAs($destination_path, $image_name);
+
+            $input['image'] = $image_name;
         }
 
         $banner = BannerSlider::find($id);
@@ -114,9 +140,10 @@ class BannerSliderController extends Controller
 
         try {
             $banner->title = isset($input['title']) ? $input['title'] : $banner->title;
+            $banner->image = isset($input['image']) ? $input['image'] : $banner->image;
             $banner->url_link = isset($input['url_link']) ? $input['url_link'] : $banner->url_link;
             $banner->is_active = isset($input['is_active']) ? $input['is_active'] : $banner->is_active;
-            $banner->banner_type = isset($input['banner_type']) ? $input['banner_type'] : $banner->banner_type;
+            $banner->type_banner = isset($input['type_banner']) ? $input['type_banner'] : $banner->type_banner;
             $update = $banner->save($input);
 
             return response()->json([
@@ -143,9 +170,9 @@ class BannerSliderController extends Controller
     {
         $id = $request->id;
 
-        $ads = BannerSlider::find($id);
+        $banner = BannerSlider::find($id);
 
-        if ($ads === null) {
+        if ($banner === null) {
             return response()->json([
                 'status_code' => 400,
                 'message' => 'not found',
@@ -153,7 +180,7 @@ class BannerSliderController extends Controller
             ], 400);
         }
 
-        $destroy = $ads->delete();
+        $destroy = $banner->delete();
 
         return response()->json([
             'status_code' => 200,

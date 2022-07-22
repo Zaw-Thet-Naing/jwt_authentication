@@ -43,10 +43,11 @@ class AdsController extends Controller
      */
     public function create(Request $request)
     {
-        $input = $request->only(['title', 'url_link', 'is_active', 'ads_type']);
+        $input = $request->only(['title','image' , 'url_link', 'is_active', 'ads_type']);
 
         $validator = Validator::make($input, [
             'title' => "required",
+            'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
             'url_link' => 'required',
             'is_active' => 'required',
             'ads_type' => 'required | in:agriupper,agrimiddle,agrilower,fisheryupper,fisherymiddle,fisherylower,livestockupper,livestockmiddle,livestocklower'
@@ -60,8 +61,24 @@ class AdsController extends Controller
             ], 422);
         }
 
+        if($request->hasFile('image'))
+        {
+            $destination_path = 'public/images/uploads';
+            $image = $request->file('image');
+            $image_name = time(). '.' . $image->getClientOriginalExtension();
+            $path = $request->file('image')->storeAs($destination_path, $image_name);
+
+            $request->image = $image_name;
+        }
+
         try {
-            $store = Ads::create($input);
+            $store = Ads::create([
+                'title' => $request->title,
+                'image' => $request->image,
+                'url_link' => $request->url_link,
+                'is_active' => $request->is_active,
+                'ads_type' => $request->ads_type
+            ]);
             return response()->json([
                 'status_code' => 201,
                 'message' => 'ads is created',
@@ -83,15 +100,16 @@ class AdsController extends Controller
      */
     public function update(Request $request)
     {
-        $input = $request->only(['title', 'url_link', 'is_active', 'ads_type']);
+        $input = $request->only(['title','image', 'url_link', 'is_active', 'ads_type']);
 
         $id = $request->id;
 
         $validator = Validator::make($input, [
-            'title' => 'required',
-            'url_link' => 'required',
-            'is_active' => 'required',
-            'ads_type' => 'required | in:agriupper,agrimiddle,agrilower,fisheryupper,fisherymiddle,fisherylower,livestockupper,livestockmiddle,livestocklower'
+            // 'title' => 'required',
+            // 'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
+            // 'url_link' => 'required',
+            // 'is_active' => 'required',
+            // 'ads_type' => 'required | in:agriupper,agrimiddle,agrilower,fisheryupper,fisherymiddle,fisherylower,livestockupper,livestockmiddle,livestocklower'
         ]);
 
         if ($validator->fails()) {
@@ -100,6 +118,16 @@ class AdsController extends Controller
                 'message' => $validator->errors()->first(),
                 'data' => []
             ], 422);
+        }
+
+        if($request->hasFile('image'))
+        {
+            $destination_path = 'public/images/uploads';
+            $image = $request->file('image');
+            $image_name = time(). '.' . $image->getClientOriginalExtension();
+            $path = $request->file('image')->storeAs($destination_path, $image_name);
+
+            $input['image'] = $image_name;
         }
 
         $ads = Ads::find($id);
@@ -114,6 +142,7 @@ class AdsController extends Controller
 
         try {
             $ads->title = isset($input['title']) ? $input['title'] : $ads->title;
+            $ads->image = isset($input['image']) ? $input['image'] : $ads->image;
             $ads->url_link = isset($input['url_link']) ? $input['url_link'] : $ads->url_link;
             $ads->is_active = isset($input['is_active']) ? $input['is_active'] : $ads->is_active;
             $ads->ads_type = isset($input['ads_type']) ? $input['ads_type'] : $ads->ads_type;

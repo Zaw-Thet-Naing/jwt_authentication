@@ -30,6 +30,7 @@ Route::middleware(["api"])->group(function() {
     Route::post('/logout', [JWTController::class, 'logout']);
     Route::post('/refresh', [JWTController::class, 'refresh']);
     Route::post('/profile', [JWTController::class, 'profile']);
+<<<<<<< HEAD
 });
 
 Route::middleware(["api"])->group(function(){
@@ -44,6 +45,8 @@ Route::middleware(["api"])->group(function(){
     Route::post('/shops', [ShopController::class, 'store']);
     Route::put('/shops/{id}', [ShopController::class, 'update']);
     Route::delete('/shops/{id}', [ShopController::class, 'destroy']);
+=======
+>>>>>>> ee5ae73d95226af5b8b738c25c4fc2a42b2855c0
 
     Route::get('/ads' , [AdsController::class, 'index']);
     Route::post('/ads' , [AdsController::class , 'create']);
@@ -59,4 +62,17 @@ Route::middleware(["api"])->group(function(){
     Route::post('/banner' , [BannerSliderController::class, 'create']);
     Route::put('banner/{id}' , [BannerSliderController::class , 'update']);
     Route::delete('banner/{id}' , [BannerSliderController::class , 'destory']);
+<<<<<<< HEAD
+=======
+
+    Route::get('/shopCategories', [ShopCategoriesController::class, 'index']);
+    Route::post('/shopCategories', [ShopCategoriesController::class, 'store']);
+    Route::put('/shopCategories/{id}', [ShopCategoriesController::class, 'update']);
+    Route::delete('/shopCategories/{id}', [ShopCategoriesController::class, 'destroy']);
+
+    Route::get('/shops', [ShopController::class, 'index']);
+    Route::post('/shops', [ShopController::class, 'store']);
+    Route::put('/shops/{id}', [ShopController::class, 'update']);
+    Route::delete('/shops/{id}', [ShopController::class, 'destroy']);
+>>>>>>> ee5ae73d95226af5b8b738c25c4fc2a42b2855c0
 });

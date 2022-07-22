@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('ads', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            // $table->
+            $table->string('image');
             $table->string('url_link');
             $table->boolean('is_active');
             $table->enum('ads_type',['agriupper','agrimiddle','agrilower','fisheryupper','fisherymiddle','fisherylower','livestockupper','livestockmiddle','livestocklower' ]);
