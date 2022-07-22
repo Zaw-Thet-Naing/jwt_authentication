@@ -13,18 +13,36 @@ class ShopController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $pageSize = $request->page_size ? $request->page_size : 10;
         try{
-            $shop = Shop::all();
-        }catch(Exception $e){
+            $shop = Shop::paginate($pageSize);
+        }catch(QueryException $e){
             return respone()->json([
-                'error' => $e,
+                'status' => 'error',
+                'message' => 'Unknown error'
             ]);
         }
         return response()->json([
             'status' => 'successful',
             'shops' => $shop,
+        ]);
+    }
+
+    public function show($id){
+        try{
+            $shop = Shop::find($id);
+        }catch(QueryException $e){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unknown error'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'successful',
+            'shop_category' => $shop
         ]);
     }
 
@@ -68,9 +86,10 @@ class ShopController extends Controller
                 'image' => $request->image,
                 'is_active' => $request->is_active, 
             ]);
-        }catch(Exception $e){
+        }catch(QueryException $e){
             return response()->json([
-                'error' => $e
+                'status' => 'error',
+                'message' => 'Unknown error'
             ]);
         }
 
@@ -84,9 +103,10 @@ class ShopController extends Controller
     public function update(Request $request, $id){
         try{
             $shop = Shop::find($id);
-        }catch(Exception $e){
+        }catch(QueryException $e){
             return response()->json([
-                'error' => $e,
+                'status' => 'error',
+                'message' => 'Unknown error'
             ]);
         }
 
@@ -109,7 +129,7 @@ class ShopController extends Controller
             $image_name = time(). '.' . $image->getClientOriginalExtension();
             $path = $request->file('image')->storeAs($destination_path, $image_name);
 
-            $input['image'] = $image_name;
+            $request->image = $image_name;
         }
 
         if($validator->fails()){
@@ -127,9 +147,10 @@ class ShopController extends Controller
             $shop->image = $request->image;
             $shop->image = $request->is_active;
             $shop->save();   
-        }catch(Exception $e){
+        }catch(QueryException $e){
             return response()->json([
-                'error' => $e,
+                'status' => 'error',
+                'message' => 'Unknown error'
             ]);
         }
 
@@ -144,9 +165,10 @@ class ShopController extends Controller
         try{
             $shop = Shop::find($id);
             $shop->delete();
-        }catch(Exception $e){
+        }catch(QueryException $e){
             return response()->json([
-                'error' => $e,
+                'status' => 'error',
+                'message' => 'Unknown error'
             ]);
         }
         return respone()->json([
