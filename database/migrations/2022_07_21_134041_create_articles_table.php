@@ -20,6 +20,7 @@ return new class extends Migration
             $table->longText('content');
             $table->boolean('is_highlight');
             $table->boolean('is_active');
+            $table->string('image');
             $table->enum('category' , ['agricultureNews','fisheryNews','liveStockNews']);
             $table->timestamps();
         });

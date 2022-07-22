@@ -11,7 +11,7 @@ class Articles extends Model
 
     protected $table = 'articles';
 
-    protected $fillable = ['title','description','content','is_highlight','is_active','category'];
+    protected $fillable = ['title','description','content','is_highlight','is_active','image','category'];
     
     protected $hidden = [];
 

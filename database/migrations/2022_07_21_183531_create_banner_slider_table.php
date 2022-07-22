@@ -16,9 +16,10 @@ return new class extends Migration
         Schema::create('banner_slider', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('image');
             $table->string('url_link');
             $table->boolean('is_active');
-            $table->enum('banner_type', ['mainslider,footerslider,leaderboard']);
+            $table->enum('type_banner', ['mainslider,footerslider,leaderboard']);
             $table->timestamps();
         });
     }

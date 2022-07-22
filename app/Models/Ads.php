@@ -11,7 +11,7 @@ class Ads extends Model
 
     protected $table = 'ads';
 
-    protected $fillable = [ 'title' , 'url_link' , 'is_active' , 'ads_type' ];
+    protected $fillable = [ 'title' ,'image' , 'url_link' , 'is_active' , 'ads_type' ];
     
     protected $hidden = [];
     protected $casts = [];

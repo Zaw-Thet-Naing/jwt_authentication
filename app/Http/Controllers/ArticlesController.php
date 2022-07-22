@@ -44,7 +44,7 @@ class ArticlesController extends Controller
      */
     public function create(Request $request)
     {
-        $input = $request->only(['title', 'description', 'content', 'is_highlight', 'is_active', 'category']);
+        $input = $request->only(['title', 'description', 'content', 'is_highlight', 'is_active','image' ,'category']);
 
         $validator = Validator::make($input, [
             "title" => "required",
@@ -52,6 +52,7 @@ class ArticlesController extends Controller
             "content" => "required",
             "is_highlight" => "required",
             "is_active" => "required",
+            'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
             "category" => "required | in:agricultureNews,fisheryNews,liveStockNews"
         ]);
 
@@ -63,8 +64,26 @@ class ArticlesController extends Controller
             ], 422);
         }
 
+        if($request->hasFile('image'))
+        {
+            $destination_path = 'public/images/uploads';
+            $image = $request->file('image');
+            $image_name = time(). '.' . $image->getClientOriginalExtension();
+            $path = $request->file('image')->storeAs($destination_path, $image_name);
+
+            $request->image = $image_name;
+        }
+
         try {
-            $store = Articles::create($input);
+            $store = Articles::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'content' => $request->content,
+                'is_highlight' => $request->is_highlight,
+                'is_active' => $request->is_active,
+                'image' => $request->image,
+                'category' => $request->category
+            ]);
             return response()->json([
                 'status_code' => 201,
                 'message' => 'article is created',
@@ -86,17 +105,18 @@ class ArticlesController extends Controller
      */
     public function update(Request $request)
     {
-        $input = $request->only(['title', 'description', 'content', 'is_highlight', 'is_active', 'category']);
+        $input = $request->only(['title', 'description', 'content', 'is_highlight', 'is_active','image' , 'category']);
 
         $id = $request->id;
 
         $validator = Validator::make($input, [
-            "title" => "required",
-            "description" => "required",
-            "content" => "required",
-            "is_highlight" => "required",
-            "is_active" => "required",
-            "category" => "required | in:agricultureNews,fisheryNews,liveStockNews"
+            // "title" => "required",
+            // "description" => "required",
+            // "content" => "required",
+            // "is_highlight" => "required",
+            // "is_active" => "required",
+            // 'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
+            // "category" => "required | in:agricultureNews,fisheryNews,liveStockNews"
         ]);
 
         if ($validator->fails()) {
@@ -105,6 +125,16 @@ class ArticlesController extends Controller
                 "message" => $validator->errors()->first(),
                 "data" => []
             ], 422);
+        }
+
+        if($request->hasFile('image'))
+        {
+            $destination_path = 'public/images/uploads';
+            $image = $request->file('image');
+            $image_name = time(). '.' . $image->getClientOriginalExtension();
+            $path = $request->file('image')->storeAs($destination_path, $image_name);
+
+            $input['image'] = $image_name;
         }
 
         $articles = Articles::find($id);
@@ -123,6 +153,7 @@ class ArticlesController extends Controller
             $articles->content = isset($input['content']) ? $input['content'] : $articles->content;
             $articles->is_highlight = isset($input['is_highlight']) ? $input['is_highlight'] : $articles->is_highlight;
             $articles->is_active = isset($input['is_active']) ? $input['is_active'] : $articles->is_active;
+            $articles->image = isset($input['image']) ? $input['image'] : $articles->image;
             $articles->category = isset($input['category']) ? $input['category'] : $articles->category;
 
             $update = $articles->save($input);
