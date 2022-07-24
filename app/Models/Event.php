@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Event extends Model
 {
     use HasFactory;
+
+    protected $fillable = ["title", "url_link", "is_active"];
 }
