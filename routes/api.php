@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JWTController;
-
+use App\Http\Controllers\EventController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -25,4 +25,12 @@ Route::middleware(["api"])->group(function() {
     Route::post('/logout', [JWTController::class, 'logout']);
     Route::post('/refresh', [JWTController::class, 'refresh']);
     Route::post('/profile', [JWTController::class, 'profile']);
+});
+
+Route::controller(EventController::class)->group(function() {
+    Route::get("events", "index");
+    Route::get("events/{id}", "show");
+    Route::post("events", "create");
+    Route::put("events/{id}", "update");
+    Route::delete("events/{id}", "destroy");
 });
