@@ -49,8 +49,10 @@ class ShopCategoriesController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $input = $request->only('name', 'icon', 'dir_category', 'is_active');
+        $validator = Validator::make($input, [
             'name' => 'required|string|max:255|unique:shop_categories,name',
+            'icon' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
             'dir_category' => 'required|in:Agriculture,Livestock,Fishery',
             'is_active' => 'required|boolean'
         ]);
@@ -61,9 +63,20 @@ class ShopCategoriesController extends Controller
             ]);
         }
 
+        if($request->hasFile('icon'))
+        {
+            $destination_path = 'public/images/uploads';
+            $image = $request->file('icon');
+            $image_name = time(). '.' . $image->getClientOriginalExtension();
+            $path = $request->file('icon')->storeAs($destination_path, $image_name);
+
+            $request->icon = $image_name;
+        }
+
         try{
             $shopCategory = ShopCategories::create([
                 'name' => $request->name,
+                'icon' => $request->icon,
                 'dir_category' => $request->dir_category,
                 'is_active' => $request->is_active
             ]);
@@ -93,12 +106,23 @@ class ShopCategoriesController extends Controller
 
         $validator = Validation::make($request->all(), [
             'name' => 'required|string|max:255|unique:App\shop_categories,name',
+            'icon' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
             'dir_category' => 'required|in:Agriculture,Livestock,Fishery',
             'is_active' => 'required|boolean',
         ]);
+        if($request->hasFile('icon'))
+        {
+            $destination_path = 'public/images/uploads';
+            $image = $request->file('icon');
+            $image_name = time(). '.' . $image->getClientOriginalExtension();
+            $path = $request->file('icon')->storeAs($destination_path, $image_name);
+
+            $request->icon = $image_name;
+        }
 
         try{
             $shopCategory->name = $request->name;
+            $shopCategory->icon = $request->icon;
             $shopCategory->dir_category = $request->dir_category;
             $shopCategory->is_active = $request->is_active;
             $shopCategory->save();

@@ -94,6 +94,25 @@ class AdsController extends Controller
         }
     }
 
+
+    public function show($id)
+    {
+        try{
+            $ads = Ads::find($id);
+        }catch(QueryException)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unknown error'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'successful',
+            'ads' => $ads,
+        ]);
+    }
+
     /**
      * Update Ads
      * @var request

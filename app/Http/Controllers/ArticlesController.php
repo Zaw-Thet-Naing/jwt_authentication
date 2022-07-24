@@ -38,6 +38,23 @@ class ArticlesController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        try{
+            $article = Articles::find($id);
+        }catch(QueryException $e){
+            response()->json([
+                'status' => 'error',
+                'message' => 'Unknown Error',
+            ], 201);
+        }
+
+        return response()->json([
+            'status' => 'successful',
+            'article' => $article
+        ]);
+    }
+
     /**
      * Create articles
      * @var request
@@ -86,15 +103,14 @@ class ArticlesController extends Controller
                 'category' => $request->category
             ]);
             return response()->json([
-                'status_code' => 201,
+                'status' => 'successful',
                 'message' => 'article is created',
                 'data' => $store
             ], 201);
         } catch (QueryException $e) {
             return response()->json([
-                'status code' => 500,
-                'message' => $e,
-                'data' => null
+                'status' => 'error',
+                'error' => 'Unknown error',
             ], 500);
         }
     }

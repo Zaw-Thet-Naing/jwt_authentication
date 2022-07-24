@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('shop_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('icon');
             $table->enum('dir_category', ['Agriculture', 'Livestock', 'Fishery']);
             $table->boolean('is_active');
             $table->timestamps();

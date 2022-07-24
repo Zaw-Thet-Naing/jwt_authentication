@@ -10,4 +10,9 @@ class Shop extends Model
     use HasFactory;
     public $table = 'shop';
     protected $fillable = ['shop_category_id', 'name', 'address', 'phone', 'website', 'email', 'image', 'is_active'];
+
+    public function categories()
+    {
+        return $this->belongsTo(ShopCategories::class, 'shop_category_id');
+    }
 }
