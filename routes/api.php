@@ -29,14 +29,6 @@ Route::middleware(["api"])->group(function() {
     Route::post('/profile', [JWTController::class, 'profile']);
 });
 
-Route::controller(EventController::class)->group(function() {
-    Route::get("events", "index");
-    Route::get("events/{id}", "show");
-    Route::post("events", "create");
-    Route::put("events/{id}", "update");
-    Route::delete("events/{id}", "destroy");
-});
-
 Route::controller(MagazineController::class)->group(function() {
     Route::get("magazines", "index");
     Route::get("magazines/{id}", "show");
