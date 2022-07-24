@@ -27,7 +27,7 @@ class ShopCategoriesController extends Controller
 
         return response()->json([
             'status' => 'successful',
-            'shop-categories' => $shopCategory,
+            'shop_categories' => $shopCategory,
         ]);
     }
 
